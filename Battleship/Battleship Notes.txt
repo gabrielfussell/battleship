@@ -1,0 +1,78 @@
+|___|_1_|_2_|_3_|_4_|_5_|
+|_A_|___|___|___|___|___|
+|_B_|___|___|___|___|___|
+|_C_|___|___|___|___|___|
+|_D_|___|___|___|___|___|
+|_E_|___|___|___|___|___|
+
+three spaces in each grid square. All underscores if no value.
+Two types of spaces: standard (|___) and end (|___|)
+
+5 x 5 grid for board. 
+Array of arrays. Coordinate of position to hit corresponds to
+	place in array. A3 = array[1][3]. 0,0 is not used.
+	
+Point
+	X and Y values
+	
+Weakpoint is a subclass of point that also has a property for
+	whether or not they have been hit.
+	
+Two boards are generated: ocean and target.
+Ocean is for ships
+Target is only red or white pegs
+	Tracks whether a shot was a hit or a miss. (X or O)
+	
+Base class "board" will contain all the inforamtion on outputting the grid to the console.
+	Subclasses will contain the variations for each.
+	Also contains the board size
+	Use the method from TreehouseDefense to check if an individual point is on the map.
+	Has method to make sure a ship will fit in the spot proposed. (the bow and orientation is fed in,
+		then each point should be checked to make sure it's on the map). If it won't fit tell the player
+		to choose a new spot.
+
+Ships:
+Have a type (first iteration all are 1x1 tugboats)
+Have a property for whether or not they have sank. This makes it easier on the main game loop.
+Have a size: number of squares they occupy
+Have a set of coordinates they occupy. Start the count from the bow of the ship.
+	Array of points.
+Have available peg slots (health? weak points?) equal to the number of squares they occupy.
+	These peg slots can be filled with red pegs when they are hit.
+	Initially all slots are empty.
+Have an orientation (horizontal or vertical)
+Constructor must check whether the ship will fit in the spot proposed. If not, have the player try again.
+
+
+Players:
+Have an array of ships
+Can shoot at a point
+	Loop through the other player's ships and see if any of them occupy the point.
+	If so, then they are hit at that point. To sink the ship all of the health must be drained.
+	A weak point can only be hit once.
+
+
+When playing:
+- The game shows an empty ocean board and asks where the player, one by one, where he would like the placement of his
+	ships to start and, if they are not tugboats, what their orientation will be
+- Opponent is the computer. At first hard code ship placement.
+- The console then shows the target board on top and the ocean board on the bottom. The target board shows where
+	the player has attempted to hit the opponent's ships and whether it was a hit (X) or a miss (O).
+	The ocean board shows where the player's ships are located. A letter indicating the type of ship means that it has not
+	been hit. Once a spot has been hit an X is listed after the ship type:
+	
+	Here the middle of the submarine in B4 has been hit and the tugboat in C3 has sank.
+	|___|_1_|_2_|_3_|_4_|_5_|
+	|_A_|_B_|___|___|_S_|___|
+	|_B_|_B_|___|___|_SX|___|
+	|_C_|_B_|___|_TX|_S_|___|
+	|_D_|_B_|___|___|___|___|
+	|_E_|___|___|___|___|___|
+	
+Types of ships and number of weak points:
+	Carrier (C) 5
+	Battleship (B) 4
+	Cruiser (R) 3
+	Submarine (S) 3
+	Destroyer (D) 2
+	Tugboat (T) 1
