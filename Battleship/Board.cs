@@ -10,12 +10,16 @@ namespace Battleship
     {
         
         public int Size { get; private set; }
-        private static char[]? _coordianteMap { get; set; }
+        public List<char> CoordianteMap { get; set; } = new List<char>();
+        //change to a more general class than Ship. The Board subclass Target will need to hold pegs.
+        public Ship[,] board { get; set; }
+        private string emptyCell { get; } = "|___";
 
         public Board(int size)
         {
-            Size = size;
-            _coordianteMap = CreateCoordinateMap(size);
+            Size = size + 1; //add one to account for first row and column being labels
+            CoordianteMap = CreateCoordinateMap(Size);
+            board = new Ship[Size,Size];
         }
 
         /* Empty board layout:
@@ -27,45 +31,115 @@ namespace Battleship
         |_D_|___|___|___|___|___|
         |_E_|___|___|___|___|___|
          */
-        public bool OnBoard(Point point)
+
+        public void DisplayBoard()
+        {
+            for(int i = 0; i < Size; i++) //rows
+            {
+                string row = "";
+
+                for(int ii = 0; ii < Size; ii++) //cells
+                {
+                    if(i == 0)
+                    {
+                        //first row
+                        if(ii == 0)
+                        {
+                            row += emptyCell;
+                        }
+                        else
+                        {
+                            row += CreatePopulatedCell(ii.ToString());
+                        } 
+                    }
+                    else if(i > 0 && ii == 0)
+                    {
+                        /*
+                         First column in all subsequent rows.
+                         Convert the row number to a character and use that as the label.
+                         */
+                        char letter = (char)(i + 64);
+                        row += CreatePopulatedCell(letter.ToString());
+                    }
+                    else
+                    {
+                        //Otherwise check for an item in board array at the coordinate
+                        if (board[i, ii] == null)
+                        {
+                            row += emptyCell;
+                        }
+                        else
+                        {
+                            //display the ship type abbreviation and whether it's been hit
+                        }
+                        
+                    }
+                }
+
+                row += "|";
+                Console.WriteLine(row);
+            }
+            Console.WriteLine();
+        }
+
+        private string CreatePopulatedCell(string value)
+        {
+            //values start at position 2
+            // Empty: |___ Populated: |_S_ or |_SX
+            if(value.Length > 2)
+            {
+                throw new ArgumentException("value of a cell cannot be more than 2 characters long");
+            }
+
+            string cell = "|_" + value;
+            if (value.Length == 1) cell += "_";
+            return cell;
+        }
+
+        public bool IsOnBoard(string coordinate)
+        {
+            Point p = CoordinateToPoint(coordinate);
+            return IsPointOnBoard(p);
+        }
+
+        private bool IsPointOnBoard(Point point)
         {
             /*
-             The first row and first column shown above are only added visually in the console.
-             They are not part of the board that the class uses.
+             The first row and first column are reserved for labels and aren't
+             available to place points on.
              */
-            return point.X >= 0 && point.X < Size
-                && point.Y >= 0 && point.Y < Size;
+            return point.X > 0 && point.X <= Size
+                && point.Y > 0 && point.Y <= Size;
         }
 
-        public bool OnBoard(string coordinate)
-        {
-            //take in a coordinate in the format "B3" from the console
-            return true;
-        }
-
-        //create another OnBoard that takes in a point?
-
+        //Should maybe be moved to the point class?
         private Point CoordinateToPoint(string coordinate)
         {
-            int x = Array.IndexOf(_coordianteMap, coordinate);
+            if(coordinate.Length != 2)
+            {
+                throw new ArgumentException("coordinate must have a length of two characters.");
+            }
+
+            int x = CoordianteMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
             int y = Int32.Parse(coordinate.Substring(1, 1));
             return new Point(x, y);
         }
 
-        private char[] CreateCoordinateMap(int boardSize)
+        private List<char> CreateCoordinateMap(int boardSize)
         {
             /*
-             Returns an array of letters in reverse order equal to the size of the board.
+             Returns a list of letters in reverse order equal to the size of the board.
                 EX: [E,D,C,B,A]
-             This is to assist with converting coordinates in the format "B3" to a traditional X,Y point
+             This is to assist with converting coordinates in the format "B3" to a traditional X,Y point.
+             The first cell on the board is not available, so only create for boardSize - 1.
             */
-            char[] coordinateMap = new char[boardSize];
-            for(int i = 0; i < coordinateMap.Length; i++)
+            List<char> coordinateMap = new List<char>(boardSize);
+            for (int i = 0; i < boardSize - 1; i++)
             {
-                coordinateMap[i] = (char)(i + 65);
+                coordinateMap.Add((char)(i + 65));
             }
 
-            Array.Reverse(coordinateMap);
+            coordinateMap.Reverse();
             return coordinateMap;
         }
 

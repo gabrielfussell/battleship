@@ -19,3 +19,9 @@ Console.WriteLine(translate);
 
 
 Battleship.Board b = new Battleship.Board(5);
+
+foreach (char ch in b.CoordianteMap)
+{
+    Console.WriteLine(ch.ToString());
+}
+b.DisplayBoard();

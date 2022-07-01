@@ -1,3 +1,6 @@
+Coodinates are in the format "A3"
+Points are in the traditional X,Y format. A3 as a point is 4, 2.
+
 |___|_1_|_2_|_3_|_4_|_5_|
 |_A_|___|___|___|___|___|
 |_B_|___|___|___|___|___|
@@ -41,11 +44,11 @@ Have available peg slots (health? weak points?) equal to the number of squares t
 	These peg slots can be filled with red pegs when they are hit.
 	Initially all slots are empty.
 Have an orientation (horizontal or vertical)
-Constructor must check whether the ship will fit in the spot proposed. If not, have the player try again.
+Before creating the ship check if it will fit in the spot proposed. If not, have the player try again.
 
 
 Players:
-Have an array of ships
+Have a collection of ships
 Can shoot at a point
 	Loop through the other player's ships and see if any of them occupy the point.
 	If so, then they are hit at that point. To sink the ship all of the health must be drained.
