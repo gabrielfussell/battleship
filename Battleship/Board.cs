@@ -40,9 +40,8 @@ namespace Battleship
 
                 for(int ii = 0; ii < Size; ii++) //cells
                 {
-                    if(i == 0)
+                    if(i == 0) //first row
                     {
-                        //first row
                         if(ii == 0)
                         {
                             row += emptyCell;
@@ -55,7 +54,7 @@ namespace Battleship
                     else if(i > 0 && ii == 0)
                     {
                         /*
-                         First column in all subsequent rows.
+                         First column in all rows past the first.
                          Convert the row number to a character and use that as the label.
                          */
                         char letter = (char)(i + 64);
@@ -84,7 +83,6 @@ namespace Battleship
 
         private string CreatePopulatedCell(string value)
         {
-            //values start at position 2
             // Empty: |___ Populated: |_S_ or |_SX
             if(value.Length > 2)
             {
