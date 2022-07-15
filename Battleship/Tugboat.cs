@@ -10,7 +10,7 @@ namespace Battleship
     {
         public override int Size { get; protected set; } = 1;
         
-        Tugboat(int size, ShipOrientation orientation) : base(size, orientation)
+        Tugboat(int size) : base(size)
         {
 
         }

@@ -20,12 +20,11 @@ namespace Battleship
         public ShipOrientation Orientation { get; protected set; }
 
 
-        public Ship(int size, ShipOrientation orientation)
+        public Ship(int size)
         {
             Size = size;
             Health = size;
             Pegs = new List<PegSlot>(size);
-            Orientation = orientation;
         }
 
         public void Hit(Point location)

@@ -110,7 +110,23 @@ namespace Battleship
                 && point.Y > 0 && point.Y <= Size;
         }
 
-        //Should maybe be moved to the point class?
+        public bool PlaceShip(IShip ship, ShipOrientation proposedOrientation, Point proposedLocation)
+        {
+            /*
+             * Ship must be created prior to this method being called
+             * 1. Call IsOnBoard to make sure the starting location is valid
+             * 2. Based on the ship's size and orientation, are there enough spots on the board for it?
+             *      Ideas: Because the points will all be in a line you can run a loop where i = ship.Size
+             *          and increment either the x or y values each time. If each point returns true for
+             *          IsPointOnBoard then the ship will fit.
+             *          Save the point created to a list to be used to create the pegs if needed.
+             * 3. Create the Pegs list and assign it to the ship.
+             * 4. Assign the ship's orientation.
+             * If the ship could be placed return true, otherwise false.
+             */
+            return true;
+        }
+
         private Point CoordinateToPoint(string coordinate)
         {
             if(coordinate.Length != 2)
