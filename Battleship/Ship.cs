@@ -19,7 +19,6 @@ namespace Battleship
         public List<PegSlot> Pegs { get; protected set; }
         public ShipOrientation Orientation { get; protected set; }
 
-
         public Ship(int size)
         {
             Size = size;
@@ -32,6 +31,55 @@ namespace Battleship
             //mark the peg slot at that location as hit
             //decrement health
             //if health is zero then set HasSank to true
+        }
+
+        public bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation)
+        {
+
+            //Check that starting location is valid
+            if(!board.IsPointOnBoard(proposedLocation)) return false;
+
+            List<Point> points = new List<Point>(Size);
+
+            /*
+             * Because the points are all in a line either the X or Y value will change for each point.
+             * Horizontal = increment X
+             * Veritcal = decrement Y
+             */
+
+            for(int i = 0; i < Size; i++)
+            { 
+                if (i == 0)
+                {
+                    //Starting location has already been checked
+                    points.Add(proposedLocation);
+                }
+                else
+                {
+                    if(proposedOrientation == ShipOrientation.Horizontal)
+                    {
+                        //increment X each time. Y stays the same for all points.
+                        points.Add(new Point(proposedLocation.X + i, proposedLocation.Y));   
+                    }
+                    else if(proposedOrientation == ShipOrientation.Vertical)
+                    {
+                        //decrement Y each time. X stays the same for all points.
+                        points.Add(new Point(proposedLocation.X, proposedLocation.Y - i));
+                    }
+
+                    //Is the point we just created on the board?
+                    if (!board.IsPointOnBoard(points[i])) return false;
+                }
+            }
+
+            //Now that we know all the locations are valid we can populate the Pegs list and set the ship's orientation
+            foreach(Point p in points)
+            {
+                Pegs.Add(new PegSlot(p));
+            }
+
+            Orientation = proposedOrientation;
+            return true;
         }
     }
 }

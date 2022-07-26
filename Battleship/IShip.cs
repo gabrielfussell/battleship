@@ -14,5 +14,6 @@ namespace Battleship
         ShipOrientation Orientation { get; }
         List<PegSlot> Pegs { get; }
         void Hit(Point location);
+        bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation);
     }
 }

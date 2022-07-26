@@ -13,7 +13,7 @@ namespace Battleship
         public List<char> CoordianteMap { get; set; } = new List<char>();
         //change to a more general class than Ship. The Board subclass Target will need to hold pegs.
         public Ship[,] board { get; set; }
-        private string emptyCell { get; } = "|___";
+        private string _emptyCell { get; } = "|___";
 
         public Board(int size)
         {
@@ -44,7 +44,7 @@ namespace Battleship
                     {
                         if(ii == 0)
                         {
-                            row += emptyCell;
+                            row += _emptyCell;
                         }
                         else
                         {
@@ -65,7 +65,7 @@ namespace Battleship
                         //Otherwise check for an item in board array at the coordinate
                         if (board[i, ii] == null)
                         {
-                            row += emptyCell;
+                            row += _emptyCell;
                         }
                         else
                         {
@@ -100,7 +100,7 @@ namespace Battleship
             return IsPointOnBoard(p);
         }
 
-        private bool IsPointOnBoard(Point point)
+        public bool IsPointOnBoard(Point point)
         {
             /*
              The first row and first column are reserved for labels and aren't
@@ -108,23 +108,6 @@ namespace Battleship
              */
             return point.X > 0 && point.X <= Size
                 && point.Y > 0 && point.Y <= Size;
-        }
-
-        public bool PlaceShip(IShip ship, ShipOrientation proposedOrientation, Point proposedLocation)
-        {
-            /*
-             * Ship must be created prior to this method being called
-             * 1. Call IsOnBoard to make sure the starting location is valid
-             * 2. Based on the ship's size and orientation, are there enough spots on the board for it?
-             *      Ideas: Because the points will all be in a line you can run a loop where i = ship.Size
-             *          and increment either the x or y values each time. If each point returns true for
-             *          IsPointOnBoard then the ship will fit.
-             *          Save the point created to a list to be used to create the pegs if needed.
-             * 3. Create the Pegs list and assign it to the ship.
-             * 4. Assign the ship's orientation.
-             * If the ship could be placed return true, otherwise false.
-             */
-            return true;
         }
 
         private Point CoordinateToPoint(string coordinate)
