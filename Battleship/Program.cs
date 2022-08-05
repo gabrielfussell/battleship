@@ -1,27 +1,43 @@
 ﻿// See https://aka.ms/new-console-template for more information
-char c = 'A';
-int index = (int)c;
+using Battleship;
 
-Console.WriteLine(index.ToString());
-Console.WriteLine((index - 65).ToString());
+//char c = 'A';
+//int index = (int)c;
 
-int mapSize = 5;
-char[] translate = new char[mapSize];
+//Console.WriteLine(index.ToString());
+//Console.WriteLine((index - 65).ToString());
 
-for (int i = 0; i < mapSize; i++)
+//int mapSize = 5;
+//char[] translate = new char[mapSize];
+
+//for (int i = 0; i < mapSize; i++)
+//{
+//    translate[i] = (char)(i + 65);
+//}
+
+//Console.WriteLine(translate);
+//Array.Reverse(translate);
+//Console.WriteLine(translate);
+
+
+Board b = new Board(5);
+
+//foreach (char ch in b.CoordianteMap)
+//{
+//    Console.WriteLine(ch.ToString());
+//}
+b.DisplayBoard();
+
+IShip tugboat = new Tugboat();
+
+//Console.Write("Location (2,3): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(2, 3)) + "\n");
+//Console.Write("Location (0,0): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(0, 0)) + "\n");
+//Console.Write("Location (1,5): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(1, 5)) + "\n");
+Console.Write("Location (5,1): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(5, 1)) + "\n");
+
+foreach (PegSlot peg in tugboat.Pegs)
 {
-    translate[i] = (char)(i + 65);
+    Console.WriteLine(peg.Location.ToString());
 }
 
-Console.WriteLine(translate);
-Array.Reverse(translate);
-Console.WriteLine(translate);
-
-
-Battleship.Board b = new Battleship.Board(5);
-
-foreach (char ch in b.CoordianteMap)
-{
-    Console.WriteLine(ch.ToString());
-}
 b.DisplayBoard();

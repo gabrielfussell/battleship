@@ -8,11 +8,7 @@ namespace Battleship
 {
     internal class Tugboat : Ship
     {
+        public override string MapLabel { get; } = "T";
         public override int Size { get; protected set; } = 1;
-
-        Tugboat(int size) : base(size)
-        {
-
-        }
     }
 }

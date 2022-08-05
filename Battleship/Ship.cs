@@ -13,17 +13,17 @@ namespace Battleship
     }
     abstract class Ship : IShip
     {
+        public abstract string MapLabel { get; }
         public bool HasSank { get; protected set; } = false;
         public abstract int Size { get; protected set; }
         public int Health { get; protected set; }
         public List<PegSlot> Pegs { get; protected set; }
         public ShipOrientation Orientation { get; protected set; }
 
-        public Ship(int size)
+        public Ship()
         {
-            Size = size;
-            Health = size;
-            Pegs = new List<PegSlot>(size);
+            Health = Size;
+            Pegs = new List<PegSlot>(Size);
         }
 
         public void Hit(Point location)
@@ -72,13 +72,16 @@ namespace Battleship
                 }
             }
 
-            //Now that we know all the locations are valid we can populate the Pegs list and set the ship's orientation
+            //Now that we know all the locations are valid we can populate the Pegs list and
+            //put a reference to the ship object in the BoardSpaces array
             foreach(Point p in points)
             {
                 Pegs.Add(new PegSlot(p));
+                board.BoardSpaces[p.X, p.Y] = this;
             }
 
             Orientation = proposedOrientation;
+
             return true;
         }
     }

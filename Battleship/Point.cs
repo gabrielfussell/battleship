@@ -29,5 +29,10 @@ namespace Battleship
         {
             return (X.GetHashCode() * 31) + Y.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return "(" + X + "," + Y + ")";
+        }
     }
 }

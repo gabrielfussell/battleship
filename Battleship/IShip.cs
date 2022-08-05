@@ -8,6 +8,7 @@ namespace Battleship
 {
     internal interface IShip
     {
+        string MapLabel { get; }
         bool HasSank { get; }
         int Size { get; }
         int Health { get; }

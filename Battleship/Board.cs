@@ -12,14 +12,14 @@ namespace Battleship
         public int Size { get; private set; }
         public List<char> CoordianteMap { get; set; } = new List<char>();
         //change to a more general class than Ship. The Board subclass Target will need to hold pegs.
-        public Ship[,] board { get; set; }
+        public IShip[,] BoardSpaces { get; set; }
         private string _emptyCell { get; } = "|___";
 
         public Board(int size)
         {
             Size = size + 1; //add one to account for first row and column being labels
             CoordianteMap = CreateCoordinateMap(Size);
-            board = new Ship[Size,Size];
+            BoardSpaces = new Ship[Size,Size];
         }
 
         /* Empty board layout:
@@ -63,13 +63,14 @@ namespace Battleship
                     else
                     {
                         //Otherwise check for an item in board array at the coordinate
-                        if (board[i, ii] == null)
+                        if (BoardSpaces[i, ii] == null)
                         {
                             row += _emptyCell;
                         }
                         else
                         {
                             //display the ship type abbreviation and whether it's been hit
+                            row += CreatePopulatedCell(BoardSpaces[i, ii].MapLabel);
                         }
                         
                     }
@@ -107,7 +108,7 @@ namespace Battleship
              available to place points on.
              */
             return point.X > 0 && point.X <= Size
-                && point.Y > 0 && point.Y <= Size;
+                && point.Y >= 0 && point.Y < Size;
         }
 
         private Point CoordinateToPoint(string coordinate)
