@@ -12,14 +12,14 @@ namespace Battleship
         public int Size { get; private set; }
         public List<char> CoordianteMap { get; set; } = new List<char>();
         //change to a more general class than Ship. The Board subclass Target will need to hold pegs.
-        public IShip[,] BoardSpaces { get; set; }
+        public BoardSpaces BoardSpaces { get; private set; }
         private string _emptyCell { get; } = "|___";
 
         public Board(int size)
         {
             Size = size + 1; //add one to account for first row and column being labels
             CoordianteMap = CreateCoordinateMap(Size);
-            BoardSpaces = new Ship[Size,Size];
+            BoardSpaces = new BoardSpaces(Size);
         }
 
         /* Empty board layout:
@@ -34,51 +34,53 @@ namespace Battleship
 
         public void DisplayBoard()
         {
-            for(int i = 0; i < Size; i++) //rows
+            string boardToDisplay = "";
+            for(int y = 0; y < Size; y++) //rows are created bottom to top
             {
                 string row = "";
 
-                for(int ii = 0; ii < Size; ii++) //cells
+                for(int x = 0; x < Size; x++) //cells
                 {
-                    if(i == 0) //first row
+                    if(y == Size - 1) //top row
                     {
-                        if(ii == 0)
+                        if(x == 0)
                         {
                             row += _emptyCell;
                         }
                         else
                         {
-                            row += CreatePopulatedCell(ii.ToString());
+                            row += CreatePopulatedCell(x.ToString());
                         } 
                     }
-                    else if(i > 0 && ii == 0)
+                    else if(y < Size - 1 && x == 0)
                     {
                         /*
-                         First column in all rows past the first.
+                         First column in all rows other than the top.
                          Convert the row number to a character and use that as the label.
                          */
-                        char letter = (char)(i + 64);
+                        char letter = CoordianteMap[y];
                         row += CreatePopulatedCell(letter.ToString());
                     }
                     else
                     {
                         //Otherwise check for an item in board array at the coordinate
-                        if (BoardSpaces[i, ii] == null)
+                        if (BoardSpaces.GetSpace(x, y) == null)
                         {
                             row += _emptyCell;
                         }
                         else
                         {
                             //display the ship type abbreviation and whether it's been hit
-                            row += CreatePopulatedCell(BoardSpaces[i, ii].MapLabel);
+                            row += CreatePopulatedCell(BoardSpaces.GetSpace(x, y).MapLabel);
                         }
                         
                     }
                 }
 
-                row += "|";
-                Console.WriteLine(row);
+                row += "|\n";
+                boardToDisplay = row + boardToDisplay;
             }
+            Console.WriteLine(boardToDisplay);
             Console.WriteLine();
         }
 

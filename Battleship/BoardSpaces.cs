@@ -21,7 +21,7 @@ namespace Battleship
         {
             Spaces = new IShip[boardSize, boardSize];
 
-            YTransform = Enumerable.Range(0, boardSize + 1).ToArray();
+            YTransform = Enumerable.Range(0, boardSize).ToArray();
             Array.Reverse(YTransform);
         }
 

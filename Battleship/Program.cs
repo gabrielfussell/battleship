@@ -30,10 +30,10 @@ b.DisplayBoard();
 
 IShip tugboat = new Tugboat();
 
-//Console.Write("Location (2,3): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(2, 3)) + "\n");
+Console.Write("Location (2,3): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(2, 3)) + "\n");
 //Console.Write("Location (0,0): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(0, 0)) + "\n");
 //Console.Write("Location (1,5): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(1, 5)) + "\n");
-Console.Write("Location (5,1): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(5, 1)) + "\n");
+Console.Write("Location (1,1): " + tugboat.Place(b, ShipOrientation.Horizontal, new Point(1, 1)) + "\n");
 
 foreach (PegSlot peg in tugboat.Pegs)
 {

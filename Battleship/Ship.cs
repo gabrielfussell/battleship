@@ -77,7 +77,7 @@ namespace Battleship
             foreach(Point p in points)
             {
                 Pegs.Add(new PegSlot(p));
-                board.BoardSpaces[p.X, p.Y] = this;
+                board.BoardSpaces.SetSpace(this, p);
             }
 
             Orientation = proposedOrientation;
