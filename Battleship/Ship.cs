@@ -26,6 +26,12 @@ namespace Battleship
             WeakPoints = new List<WeakPoint>(Size);
         }
 
+        public void DecrementHealth()
+        {
+            Health--;
+            if (Health <= 0) HasSank = true;
+        }
+
         public bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation)
         {
 

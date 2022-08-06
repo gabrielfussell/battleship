@@ -15,5 +15,18 @@ namespace Battleship
         {
             ContainingShip = containingShip;
         }
+
+        public void Hit()
+        {
+            if(IsHit == false)
+            {
+                IsHit = true;
+                ContainingShip.DecrementHealth();
+            }
+            else
+            {
+                throw new Exception("Weak point can only be hit once.");
+            }
+        }
     }
 }

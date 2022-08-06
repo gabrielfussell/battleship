@@ -39,6 +39,9 @@ Console.Write("Location A1: " + tugboat.Place(b, ShipOrientation.Horizontal, b.C
 Console.Write("Location A4: " + carrier.Place(b, ShipOrientation.Vertical, b.CoordinateToPoint("A4")) + "\n");
 Console.Write("Location D2: " + destroyer.Place(b, ShipOrientation.Horizontal, b.CoordinateToPoint("D2")) + "\n");
 
+carrier.WeakPoints[0].Hit();
+carrier.WeakPoints[2].Hit();
+
 foreach (WeakPoint weakPoint in carrier.WeakPoints)
 {
     Console.WriteLine(weakPoint.ToString());

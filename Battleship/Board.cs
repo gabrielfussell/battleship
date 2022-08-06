@@ -64,15 +64,20 @@ namespace Battleship
                     }
                     else
                     {
-                        //Otherwise check for an item in board array at the coordinate
-                        if (BoardSpaces.GetSpace(x, y) == null)
+                        //Otherwise check for a weakpoint in board array at the coordinate
+                        WeakPoint weakpoint = BoardSpaces.GetSpace(x, y);
+                        
+                        if (weakpoint == null)
                         {
                             row += _emptyCell;
                         }
                         else
                         {
                             //display the ship type abbreviation and whether it's been hit
-                            row += CreatePopulatedCell(BoardSpaces.GetSpace(x, y).ContainingShip.MapLabel);
+                            string cellValue = weakpoint.ContainingShip.MapLabel;
+                            if (weakpoint.IsHit) cellValue += "X";
+
+                            row += CreatePopulatedCell(cellValue); 
                         }
                         
                     }
