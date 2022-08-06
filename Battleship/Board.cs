@@ -98,7 +98,7 @@ namespace Battleship
             return cell;
         }
 
-        public bool IsOnBoard(string coordinate)
+        public bool IsCoordinateOnBoard(string coordinate)
         {
             Point p = CoordinateToPoint(coordinate);
             return IsPointOnBoard(p);
@@ -114,15 +114,15 @@ namespace Battleship
                 && point.Y >= 0 && point.Y < Size;
         }
 
-        private Point CoordinateToPoint(string coordinate)
+        public Point CoordinateToPoint(string coordinate)
         {
             if(coordinate.Length != 2)
             {
                 throw new ArgumentException("coordinate must have a length of two characters.");
             }
 
-            int x = CoordianteMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
-            int y = Int32.Parse(coordinate.Substring(1, 1));
+            int x = Int32.Parse(coordinate.Substring(1, 1));
+            int y = CoordianteMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
             return new Point(x, y);
         }
 
@@ -143,20 +143,5 @@ namespace Battleship
             coordinateMap.Reverse();
             return coordinateMap;
         }
-
-        ////Converts a letter of the alphabet to a number, starting with A = 0, B = 1, C = 2, etc.
-        //private int ConvertToNumber(char c) => Convert.ToInt32(c) - 65;
-        //private int ConvertToNumber(string s)
-        //{
-        //    if(s.Length != 1)
-        //    {
-        //        throw new ArgumentException("Input string can only be 1 character long");
-        //    }
-        //    else
-        //    {
-        //        char c = Char.Parse(s);
-        //        return ConvertToNumber(c);
-        //    }
-        //}
     }
 }

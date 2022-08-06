@@ -17,18 +17,18 @@ namespace Battleship
         public bool HasSank { get; protected set; } = false;
         public abstract int Size { get; protected set; }
         public int Health { get; protected set; }
-        public List<PegSlot> Pegs { get; protected set; }
+        public List<WeakPoint> WeakPoints { get; protected set; }
         public ShipOrientation Orientation { get; protected set; }
 
         public Ship()
         {
             Health = Size;
-            Pegs = new List<PegSlot>(Size);
+            WeakPoints = new List<WeakPoint>(Size);
         }
 
         public void Hit(Point location)
         {
-            //mark the peg slot at that location as hit
+            //mark the weak point at that location as hit
             //decrement health
             //if health is zero then set HasSank to true
         }
@@ -72,11 +72,11 @@ namespace Battleship
                 }
             }
 
-            //Now that we know all the locations are valid we can populate the Pegs list and
+            //Now that we know all the locations are valid we can populate the list of weak points and
             //put a reference to the ship object in the BoardSpaces array
             foreach(Point p in points)
             {
-                Pegs.Add(new PegSlot(p));
+                WeakPoints.Add(new WeakPoint(p, this));
                 board.BoardSpaces.SetSpace(this, p);
             }
 

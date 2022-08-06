@@ -13,7 +13,7 @@ namespace Battleship
         int Size { get; }
         int Health { get; }
         ShipOrientation Orientation { get; }
-        List<PegSlot> Pegs { get; }
+        List<WeakPoint> WeakPoints { get; }
         void Hit(Point location);
         bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation);
     }

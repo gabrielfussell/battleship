@@ -35,32 +35,34 @@ namespace Battleship
             return Spaces[YTransform[p.Y], p.X];
         }
 
-        public bool SetSpace(IShip ship, int x, int y)
+        public void SetSpace(IShip ship, int x, int y)
         {
-            try
+            if(!IsSpaceAvailable(x, y))
             {
-                Spaces[YTransform[y], x] = ship;
+                throw new ArgumentException("This space is already occupied by another ship");
             }
-            catch (IndexOutOfRangeException ex)
-            {
-                return false;
-            }
-            
-            return true;
+
+            Spaces[YTransform[y], x] = ship;
         }
 
-        public bool SetSpace(IShip ship, Point p)
+        public void SetSpace(IShip ship, Point p)
         {
-            try
+            if(!IsSpaceAvailable(p))
             {
-                Spaces[YTransform[p.Y], p.X] = ship;
-            }
-            catch(IndexOutOfRangeException ex)
-            {
-                return false;
+                throw new ArgumentException("This space is already occupied by another ship");
             }
 
-            return true;
+            Spaces[YTransform[p.Y], p.X] = ship;
+        }
+
+        public bool IsSpaceAvailable(Point p)
+        {
+            return GetSpace(p) == null;
+        }
+
+        public bool IsSpaceAvailable(int x, int y)
+        {
+            return GetSpace(x, y) == null;
         }
     }
 }
