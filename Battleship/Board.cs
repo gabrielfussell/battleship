@@ -32,6 +32,7 @@ namespace Battleship
         |_E_|___|___|___|___|___|
          */
 
+        //Should this just loop through BoardSpaces instead?
         public void DisplayBoard()
         {
             string boardToDisplay = "";
