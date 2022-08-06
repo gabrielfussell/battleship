@@ -26,20 +26,13 @@ namespace Battleship
             WeakPoints = new List<WeakPoint>(Size);
         }
 
-        public void Hit(Point location)
-        {
-            //mark the weak point at that location as hit
-            //decrement health
-            //if health is zero then set HasSank to true
-        }
-
         public bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation)
         {
 
             //Check that starting location is valid
             if(!board.IsPointOnBoard(proposedLocation)) return false;
 
-            List<Point> points = new List<Point>(Size);
+            List<WeakPoint> weakPoints = new List<WeakPoint>(Size);
 
             /*
              * Because the points are all in a line either the X or Y value will change for each point.
@@ -52,32 +45,38 @@ namespace Battleship
                 if (i == 0)
                 {
                     //Starting location has already been checked
-                    points.Add(proposedLocation);
+                    weakPoints.Add(new WeakPoint(proposedLocation.X, proposedLocation.Y, this));
                 }
                 else
                 {
                     if(proposedOrientation == ShipOrientation.Horizontal)
                     {
                         //increment X each time. Y stays the same for all points.
-                        points.Add(new Point(proposedLocation.X + i, proposedLocation.Y));   
+                        weakPoints.Add(new WeakPoint(proposedLocation.X + i, proposedLocation.Y, this));   
                     }
                     else if(proposedOrientation == ShipOrientation.Vertical)
                     {
                         //decrement Y each time. X stays the same for all points.
-                        points.Add(new Point(proposedLocation.X, proposedLocation.Y - i));
+                        weakPoints.Add(new WeakPoint(proposedLocation.X, proposedLocation.Y - i, this));
                     }
 
-                    //Is the point we just created on the board?
-                    if (!board.IsPointOnBoard(points[i])) return false;
+                    //Make sure the point we just created is on the board and not already occupied
+                    if (
+                        !(
+                            board.IsPointOnBoard(weakPoints[i]) 
+                            && board.BoardSpaces.IsSpaceAvailable(weakPoints[i])
+                          )
+                        ) return false;
                 }
             }
 
-            //Now that we know all the locations are valid we can populate the list of weak points and
-            //put a reference to the ship object in the BoardSpaces array
-            foreach(Point p in points)
+            //Now that we know all the locations are valid we can populate the WeakPoints property and
+            //put a reference to the WeakPoint objects in the BoardSpaces array
+            WeakPoints = weakPoints;
+
+            foreach (WeakPoint wp in WeakPoints)
             {
-                WeakPoints.Add(new WeakPoint(p, this));
-                board.BoardSpaces.SetSpace(this, p);
+                board.BoardSpaces.SetSpace(wp);
             }
 
             Orientation = proposedOrientation;

@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    internal class WeakPoint
+    internal class WeakPoint : Point
     {
-        public Point Location { get; private set; }
         public bool IsHit { get; private set; } = false;
         public IShip ContainingShip { get; private set; }
 
-        public WeakPoint(Point location, IShip containingShip)
+        public WeakPoint(int x, int y, IShip containingShip) : base(x, y)
         {
-            Location = location;
             ContainingShip = containingShip;
         }
     }

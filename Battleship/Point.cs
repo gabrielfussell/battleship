@@ -17,6 +17,7 @@ namespace Battleship
             Y = y;
         }
 
+        /*
         public override bool Equals(object obj)
         {
             if (!(obj is Point) || obj is null) return false;
@@ -29,6 +30,7 @@ namespace Battleship
         {
             return (X.GetHashCode() * 31) + Y.GetHashCode();
         }
+        */
 
         public override string ToString()
         {

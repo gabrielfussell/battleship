@@ -8,7 +8,7 @@ namespace Battleship
 {
     internal class BoardSpaces
     {
-        private IShip[,] Spaces { get; set; }
+        private WeakPoint[,] Spaces { get; set; }
         /*
         YTransform is needed because the Spaces array accesses items
         in Y, X order, starting from the top rather than the bottom.
@@ -19,50 +19,35 @@ namespace Battleship
 
         public BoardSpaces(int boardSize)
         {
-            Spaces = new IShip[boardSize, boardSize];
+            Spaces = new WeakPoint[boardSize, boardSize];
 
             YTransform = Enumerable.Range(0, boardSize).ToArray();
             Array.Reverse(YTransform);
         }
 
-        public IShip GetSpace(int x, int y)
+        public WeakPoint GetSpace(int x, int y)
         {
             return Spaces[YTransform[y], x];
         }
 
-        public IShip GetSpace(Point p)
+        public WeakPoint GetSpace(Point p)
         {
             return Spaces[YTransform[p.Y], p.X];
         }
 
-        public void SetSpace(IShip ship, int x, int y)
+        public void SetSpace(WeakPoint weakPoint)
         {
-            if(!IsSpaceAvailable(x, y))
+            if(!IsSpaceAvailable(weakPoint))
             {
                 throw new ArgumentException("This space is already occupied by another ship");
             }
 
-            Spaces[YTransform[y], x] = ship;
-        }
-
-        public void SetSpace(IShip ship, Point p)
-        {
-            if(!IsSpaceAvailable(p))
-            {
-                throw new ArgumentException("This space is already occupied by another ship");
-            }
-
-            Spaces[YTransform[p.Y], p.X] = ship;
+            Spaces[YTransform[weakPoint.Y], weakPoint.X] = weakPoint;
         }
 
         public bool IsSpaceAvailable(Point p)
         {
             return GetSpace(p) == null;
-        }
-
-        public bool IsSpaceAvailable(int x, int y)
-        {
-            return GetSpace(x, y) == null;
         }
     }
 }

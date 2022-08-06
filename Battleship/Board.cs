@@ -72,7 +72,7 @@ namespace Battleship
                         else
                         {
                             //display the ship type abbreviation and whether it's been hit
-                            row += CreatePopulatedCell(BoardSpaces.GetSpace(x, y).MapLabel);
+                            row += CreatePopulatedCell(BoardSpaces.GetSpace(x, y).ContainingShip.MapLabel);
                         }
                         
                     }
