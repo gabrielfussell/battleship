@@ -47,4 +47,6 @@ foreach (WeakPoint weakPoint in carrier.WeakPoints)
     Console.WriteLine(weakPoint.ToString());
 }
 
+Console.WriteLine("Carrier size: " + carrier.Size);
+
 b.DisplayBoard();

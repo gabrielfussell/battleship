@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    internal class Board
+    internal class Board : IBoard
     {
         
-        public int Size { get; private set; }
-        public List<char> CoordianteMap { get; set; } = new List<char>();
-        //change to a more general class than Ship. The Board subclass Target will need to hold pegs.
-        public BoardSpaces BoardSpaces { get; private set; }
+        public int Size { get; protected set; }
+        public List<char> CoordinateMap { get; set; } = new List<char>();
+        public BoardSpaces BoardSpaces { get; protected set; }
         private string _emptyCell { get; } = "|___";
 
         public Board(int size)
         {
             Size = size + 1; //add one to account for first row and column being labels
-            CoordianteMap = CreateCoordinateMap(Size);
+            CoordinateMap = CreateCoordinateMap(Size);
             BoardSpaces = new BoardSpaces(Size);
         }
 
@@ -59,7 +58,7 @@ namespace Battleship
                          First column in all rows other than the top.
                          Convert the row number to a character and use that as the label.
                          */
-                        char letter = CoordianteMap[y];
+                        char letter = CoordinateMap[y];
                         row += CreatePopulatedCell(letter.ToString());
                     }
                     else
@@ -127,7 +126,7 @@ namespace Battleship
             }
 
             int x = Int32.Parse(coordinate.Substring(1, 1));
-            int y = CoordianteMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
+            int y = CoordinateMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
             return new Point(x, y);
         }
 
