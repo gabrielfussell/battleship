@@ -8,7 +8,7 @@ namespace Battleship.Ships
 {
     internal class Battleship : Ship
     {
-        public override string MapLabel { get; } = "B";
+        public override string ShortName { get; } = "B";
         public override int Size { get; protected set; } = 4;
     }
 }

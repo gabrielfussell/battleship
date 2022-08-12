@@ -13,7 +13,7 @@ namespace Battleship
     }
     abstract class Ship : IShip
     {
-        public abstract string MapLabel { get; }
+        public abstract string ShortName { get; }
         public bool HasSank { get; protected set; } = false;
         public abstract int Size { get; protected set; }
         public int Health { get; protected set; }
@@ -32,11 +32,11 @@ namespace Battleship
             if (Health <= 0) HasSank = true;
         }
 
-        public bool Place(Board board, ShipOrientation proposedOrientation, Point proposedLocation)
+        public bool Place(Board board, ShipOrientation proposedOrientation, Coordinate proposedLocation)
         {
 
             //Check that starting location is valid
-            if(!board.IsPointOnBoard(proposedLocation)) return false;
+            if(!board.IsOnBoard(proposedLocation)) return false;
 
             List<WeakPoint> weakPoints = new List<WeakPoint>(Size);
 
@@ -69,7 +69,7 @@ namespace Battleship
                     //Make sure the point we just created is on the board and not already occupied
                     if (
                         !(
-                            board.IsPointOnBoard(weakPoints[i]) 
+                            board.IsOnBoard(weakPoints[i]) 
                             && board.BoardSpaces.IsSpaceAvailable(weakPoints[i])
                           )
                         ) return false;

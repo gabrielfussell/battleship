@@ -8,7 +8,7 @@ namespace Battleship
 {
     internal class BoardSpaces
     {
-        private WeakPoint[,] Spaces { get; set; }
+        private Point[,] Spaces { get; set; }
         /*
         YTransform is needed because the Spaces array accesses items
         in Y, X order, starting from the top rather than the bottom.
@@ -19,30 +19,30 @@ namespace Battleship
 
         public BoardSpaces(int boardSize)
         {
-            Spaces = new WeakPoint[boardSize, boardSize];
+            Spaces = new Point[boardSize, boardSize];
 
             YTransform = Enumerable.Range(0, boardSize).ToArray();
             Array.Reverse(YTransform);
         }
 
-        public WeakPoint GetSpace(int x, int y)
+        public Point GetSpace(int x, int y)
         {
             return Spaces[YTransform[y], x];
         }
 
-        public WeakPoint GetSpace(Point p)
+        public Point GetSpace(Point p)
         {
             return Spaces[YTransform[p.Y], p.X];
         }
 
-        public void SetSpace(WeakPoint weakPoint)
+        public void SetSpace(Point p)
         {
-            if(!IsSpaceAvailable(weakPoint))
+            if(!IsSpaceAvailable(p))
             {
-                throw new ArgumentException("This space is already occupied by another ship");
+                throw new ArgumentException("This space is already occupied");
             }
 
-            Spaces[YTransform[weakPoint.Y], weakPoint.X] = weakPoint;
+            Spaces[YTransform[p.Y], p.X] = p;
         }
 
         public bool IsSpaceAvailable(Point p)

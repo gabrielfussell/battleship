@@ -8,15 +8,33 @@ namespace Battleship
 {
     internal class WeakPoint : Point
     {
-        public bool IsHit { get; private set; } = false;
         public IShip ContainingShip { get; private set; }
+        public override string MapLabel
+        {
+            get
+            {
+                if(IsHit)
+                {
+                    return ContainingShip.ShortName + "X";
+                }
+                else
+                {
+                    return ContainingShip.ShortName;
+                }
+            }
+        }
 
         public WeakPoint(int x, int y, IShip containingShip) : base(x, y)
         {
             ContainingShip = containingShip;
         }
 
-        public void Hit()
+        public WeakPoint(Coordinate coordinate, IShip containingShip) : base(coordinate.X, coordinate.Y)
+        {
+            ContainingShip = containingShip;
+        }
+
+        public override void Hit()
         {
             if(IsHit == false)
             {

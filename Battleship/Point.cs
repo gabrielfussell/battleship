@@ -6,15 +6,30 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    internal class Point
+    internal abstract class Point : IPoint
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int X { get; protected set; }
+        public int Y { get; protected set; }
+        public bool IsHit { get; protected set; } = false;
+        public abstract string MapLabel { get; }
 
         public Point(int x, int y)
         {
             X = x;
             Y = y;
+        }
+
+        public Point()
+        {
+
+        }
+
+        //Hit() is what modifies the IsHit property
+        public abstract void Hit();
+
+        public override string ToString()
+        {
+            return "(" + X + "," + Y + ")";
         }
 
         /*
@@ -31,10 +46,5 @@ namespace Battleship
             return (X.GetHashCode() * 31) + Y.GetHashCode();
         }
         */
-
-        public override string ToString()
-        {
-            return "(" + X + "," + Y + ")";
-        }
     }
 }

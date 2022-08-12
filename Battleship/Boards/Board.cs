@@ -6,18 +6,16 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    internal class Board : IBoard
+    abstract class Board : IBoard
     {
         
         public int Size { get; protected set; }
-        public List<char> CoordinateMap { get; set; } = new List<char>();
         public BoardSpaces BoardSpaces { get; protected set; }
         private string _emptyCell { get; } = "|___";
 
         public Board(int size)
         {
             Size = size + 1; //add one to account for first row and column being labels
-            CoordinateMap = CreateCoordinateMap(Size);
             BoardSpaces = new BoardSpaces(Size);
         }
 
@@ -63,20 +61,16 @@ namespace Battleship
                     }
                     else
                     {
-                        //Otherwise check for a weakpoint in board array at the coordinate
-                        WeakPoint weakpoint = BoardSpaces.GetSpace(x, y);
+                        //Otherwise check for data in board array at the coordinate
+                        Point p = BoardSpaces.GetSpace(x, y);
                         
-                        if (weakpoint == null)
+                        if (p == null)
                         {
                             row += _emptyCell;
                         }
                         else
                         {
-                            //display the ship type abbreviation and whether it's been hit
-                            string cellValue = weakpoint.ContainingShip.MapLabel;
-                            if (weakpoint.IsHit) cellValue += "X";
-
-                            row += CreatePopulatedCell(cellValue); 
+                            row += CreatePopulatedCell(p.MapLabel); 
                         }
                         
                     }
@@ -102,13 +96,7 @@ namespace Battleship
             return cell;
         }
 
-        public bool IsCoordinateOnBoard(string coordinate)
-        {
-            Point p = CoordinateToPoint(coordinate);
-            return IsPointOnBoard(p);
-        }
-
-        public bool IsPointOnBoard(Point point)
+        public bool IsOnBoard(IPoint point)
         {
             /*
              The first row and first column are reserved for labels and aren't
@@ -116,36 +104,6 @@ namespace Battleship
              */
             return point.X > 0 && point.X <= Size
                 && point.Y >= 0 && point.Y < Size;
-        }
-
-        public Point CoordinateToPoint(string coordinate)
-        {
-            if(coordinate.Length != 2)
-            {
-                throw new ArgumentException("coordinate must have a length of two characters.");
-            }
-
-            int x = Int32.Parse(coordinate.Substring(1, 1));
-            int y = CoordinateMap.IndexOf(char.Parse(coordinate.Substring(0, 1)));
-            return new Point(x, y);
-        }
-
-        private List<char> CreateCoordinateMap(int boardSize)
-        {
-            /*
-             Returns a list of letters in reverse order equal to the size of the board.
-                EX: [E,D,C,B,A]
-             This is to assist with converting coordinates in the format "B3" to a traditional X,Y point.
-             The first cell on the board is not available, so only create for boardSize - 1.
-            */
-            List<char> coordinateMap = new List<char>(boardSize);
-            for (int i = 0; i < boardSize - 1; i++)
-            {
-                coordinateMap.Add((char)(i + 65));
-            }
-
-            coordinateMap.Reverse();
-            return coordinateMap;
         }
     }
 }
