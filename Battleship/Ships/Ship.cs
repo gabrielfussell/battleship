@@ -13,6 +13,7 @@ namespace Battleship
     }
     abstract class Ship : IShip
     {
+        public abstract string Name { get; }
         public abstract string ShortName { get; }
         public bool HasSank { get; protected set; } = false;
         public abstract int Size { get; protected set; }

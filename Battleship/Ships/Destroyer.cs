@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Battleship.Ships
+namespace Battleship
 {
     internal class Destroyer : Ship
     {
+        public override string Name { get; } = "Destroyer";
         public override string ShortName { get; } = "D";
         public override int Size { get; protected set; } = 2;
     }

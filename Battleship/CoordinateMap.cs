@@ -16,10 +16,10 @@ namespace Battleship
         The first cell on the board is not available, so only create for boardSize - 1.
         */
         private List<char> _map { get; set; }
-        public CoordinateMap(int size)
+        public CoordinateMap(int boardSize)
         {
-            _map = new List<char>(size);
-            for(int i = 0; i < size - 1; i++)
+            _map = new List<char>(boardSize);
+            for(int i = 0; i < boardSize; i++)
             {
                 _map.Add((char)(i + 65));
             }
@@ -30,6 +30,11 @@ namespace Battleship
         public int GetYValue(char character)
         {
             return _map.IndexOf(character);
+        }
+
+        public char GetValueAtIndex(int index)
+        {
+            return _map[index];
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    abstract class Board : IBoard
+    internal class Board
     {
         
         public int Size { get; protected set; }
@@ -30,7 +30,7 @@ namespace Battleship
          */
 
         //Should this just loop through BoardSpaces instead?
-        public void DisplayBoard()
+        public void DisplayBoard(CoordinateMap coordinateMap)
         {
             string boardToDisplay = "";
             for(int y = 0; y < Size; y++) //rows are created bottom to top
@@ -56,7 +56,7 @@ namespace Battleship
                          First column in all rows other than the top.
                          Convert the row number to a character and use that as the label.
                          */
-                        char letter = CoordinateMap[y];
+                        char letter = coordinateMap.GetValueAtIndex(y);
                         row += CreatePopulatedCell(letter.ToString());
                     }
                     else
