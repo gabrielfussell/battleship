@@ -34,6 +34,8 @@ using Battleship;
 int gameSize = 5;
 CoordinateMap coordinateMap = new CoordinateMap(5);
 
+Console.WriteLine(coordinateMap.GetYValue('A'));
+
 Player player = new Player(gameSize, coordinateMap);
 player.PlaceShips();
 player.DisplayOceanBoard();

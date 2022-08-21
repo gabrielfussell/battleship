@@ -102,8 +102,8 @@ namespace Battleship
              The first row and first column are reserved for labels and aren't
              available to place points on.
              */
-            return point.X > 0 && point.X <= Size
-                && point.Y >= 0 && point.Y < Size;
+            return point.X > 0 && point.X < Size
+                && point.Y >= 0 && point.Y <= Size - 2;
         }
     }
 }

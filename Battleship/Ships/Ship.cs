@@ -33,11 +33,14 @@ namespace Battleship
             if (Health <= 0) HasSank = true;
         }
 
-        public bool Place(Board board, ShipOrientation proposedOrientation, Coordinate proposedLocation)
+        public void Place(Board board, ShipOrientation proposedOrientation, Coordinate proposedLocation)
         {
 
             //Check that starting location is valid
-            if(!board.IsOnBoard(proposedLocation)) return false;
+            if(!board.IsOnBoard(proposedLocation))
+            {
+                throw new ArgumentException("Starting location is not on the board");
+            }
 
             List<WeakPoint> weakPoints = new List<WeakPoint>(Size);
 
@@ -68,12 +71,14 @@ namespace Battleship
                     }
 
                     //Make sure the point we just created is on the board and not already occupied
-                    if (
-                        !(
-                            board.IsOnBoard(weakPoints[i]) 
-                            && board.BoardSpaces.IsSpaceAvailable(weakPoints[i])
-                          )
-                        ) return false;
+                    if (!board.IsOnBoard(weakPoints[i]))
+                    {
+                        throw new Exception("Ship does not fit in the spaces specified");
+                    }
+                    else if(!board.BoardSpaces.IsSpaceAvailable(weakPoints[i]))
+                    {
+                        throw new Exception("One or more spaces is already occupied by another ship");
+                    }
                 }
             }
 
@@ -87,8 +92,6 @@ namespace Battleship
             }
 
             Orientation = proposedOrientation;
-
-            return true;
         }
     }
 }

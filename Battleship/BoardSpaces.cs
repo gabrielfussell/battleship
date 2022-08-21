@@ -47,7 +47,15 @@ namespace Battleship
 
         public bool IsSpaceAvailable(Point p)
         {
-            return GetSpace(p) == null;
+            try
+            {
+                return GetSpace(p) == null;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Space does not exist", e);
+            }
+            
         }
     }
 }
