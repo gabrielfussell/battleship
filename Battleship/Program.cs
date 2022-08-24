@@ -37,5 +37,13 @@ CoordinateMap coordinateMap = new CoordinateMap(5);
 Console.WriteLine(coordinateMap.GetYValue('A'));
 
 Player player = new Player(gameSize, coordinateMap);
-player.PlaceShips();
-player.DisplayOceanBoard();
+Player enemy = new Player(gameSize, coordinateMap);
+
+//For testing both the player and enemy ships are at the same location
+player.PlaceShipsTest();
+enemy.PlaceShipsTest();
+
+for(int i = 0; i < 4; i++)
+{
+    player.GuessEnemyLocation(enemy);
+}

@@ -19,12 +19,6 @@ namespace Battleship
             Y = y;
         }
 
-        //Hit() is what modifies the IsHit property
         public abstract void Hit();
-
-        public override string ToString()
-        {
-            return "(" + X + "," + Y + ")";
-        }
     }
 }

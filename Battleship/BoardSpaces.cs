@@ -37,7 +37,7 @@ namespace Battleship
 
         public void SetSpace(Point p)
         {
-            if(!IsSpaceAvailable(p))
+            if(IsSpaceOccupied(p))
             {
                 throw new ArgumentException("This space is already occupied");
             }
@@ -45,17 +45,29 @@ namespace Battleship
             Spaces[YTransform[p.Y], p.X] = p;
         }
 
-        public bool IsSpaceAvailable(Point p)
+        public bool IsSpaceOccupied(Point p)
         {
             try
             {
-                return GetSpace(p) == null;
+                return GetSpace(p) != null;
             }
             catch (Exception e)
             {
                 throw new Exception("Space does not exist", e);
             }
             
+        }
+
+        public bool IsSpaceOccupied(int x, int y)
+        {
+            try
+            {
+                return GetSpace(x, y) != null;
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Space does not exist", e);
+            }
         }
     }
 }

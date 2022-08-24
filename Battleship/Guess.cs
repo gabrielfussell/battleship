@@ -37,5 +37,10 @@ namespace Battleship
         {
             IsHit = true;
         }
+
+        public void Place(Board targetBoard)
+        {
+            targetBoard.BoardSpaces.SetSpace(this);
+        }
     }
 }

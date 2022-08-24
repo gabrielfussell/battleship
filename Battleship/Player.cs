@@ -31,23 +31,19 @@ namespace Battleship
 
         public void DisplayOceanBoard()
         {
+            Console.WriteLine("Ocean Board");
             OceanBoard.DisplayBoard(CoordinateMap);
         }
 
         public void DisplayTargetBoard()
         {
+            Console.WriteLine("Target Board");
             TargetBoard.DisplayBoard(CoordinateMap);
         }
 
         public void PlaceShips()
         {
-            /*
-            Final version:
-            - loop through each of the ships in the array
-            - show the ocean board, then ask where to place the ship.
-                Give the name of the ship type and how many spaces it will occupy.
-             */
-            string instructions = @"Enter the coordinates where you want to place your ships followed by its orientation (without a space in between).
+            string instructions = @"Enter the coordinate where you want to place your ships followed by its orientation (without a space in between).
 The coordinate you enter represents the bow of the ship. 
 Horizontally placed ships are left to right, starting from the bow.
 Vertically placed ships are top to bottom, starting from the bow.
@@ -112,15 +108,15 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
         public void PlaceShipsTest()
         {
             //locations hard coded for testing
-            Ships[0].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("D4", CoordinateMap)); //Tugboat
-            Ships[1].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("A4", CoordinateMap)); //Destroyer
-            Ships[2].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("C3", CoordinateMap)); //Submarine
-            Ships[3].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("A2", CoordinateMap)); //Cruiser
-            Ships[4].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("E2", CoordinateMap)); //Battleship
-            Ships[5].Place(OceanBoard, ShipOrientation.Vertical, new Coordinate("A1", CoordinateMap)); //Carrier
+            Ships[0].Place(OceanBoard, ShipOrientation.Vertical, new Coordinate("A1", CoordinateMap)); //Carrier 5
+            Ships[1].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("E2", CoordinateMap)); //Battleship 4
+            Ships[2].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("A2", CoordinateMap)); //Cruiser 3
+            Ships[3].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("C3", CoordinateMap)); //Submarine 3
+            Ships[4].Place(OceanBoard, ShipOrientation.Horizontal, new Coordinate("B4", CoordinateMap)); //Destroyer 2
+            DisplayOceanBoard();
         }
 
-        public void GuessEnemyLocation(Player enemy, Coordinate coordinate)
+        public void GuessEnemyLocation(Player enemy)
         {
             /*
             check the other player's ocean board and see if there is a weakpoint there
@@ -129,7 +125,65 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
             Place a Guess object on the player's target board saying if the guess was
                 successful.
             Write the results to the console and display the player's boards.
+            Only allow a spot to be guessed once!
             */
+
+            string instructions = "Enter a coordinate where you think an enemy ship may be located.";
+   
+            DisplayTargetBoard();
+            Coordinate coordinate;
+            Guess guess;
+
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine(instructions);
+                    string input = Console.ReadLine().ToUpper();
+                    if (input is null)
+                    {
+                        throw new Exception("Coordinate value cannot be empty");
+                    }
+
+                    coordinate = new Coordinate(input, CoordinateMap);
+
+                    if(!TargetBoard.IsOnBoard(coordinate))
+                    {
+                        throw new Exception("Coordinate is not on board");
+                    }
+
+                    guess = new Guess(coordinate);
+                    guess.Place(TargetBoard);
+
+                    break;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message + ". Please try again.");
+                    continue;
+                }
+            }
+            
+
+            if(enemy.OceanBoard.BoardSpaces.IsSpaceOccupied(guess.X, guess.Y))
+            {
+                /*
+                The ocean board's BoardSpaces object holds a set of WeakPoints, with a reference to
+                the ship object they belong to. These are created and set in Player.PlaceShips
+                which calls Ship.Place
+                */
+                Point shipWeakPoint = enemy.OceanBoard.BoardSpaces.GetSpace(guess.X, guess.Y);
+                shipWeakPoint.Hit();
+                guess.Hit();
+
+                Console.WriteLine("Enemy ship hit!");
+            }
+            else
+            {
+                Console.WriteLine("Did not hit any ships");
+            }
+
+            TargetBoard.DisplayBoard(CoordinateMap);
         }
     }
 }
