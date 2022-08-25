@@ -36,14 +36,14 @@ CoordinateMap coordinateMap = new CoordinateMap(5);
 
 Console.WriteLine(coordinateMap.GetYValue('A'));
 
-Player player = new Player(gameSize, coordinateMap);
-Player enemy = new Player(gameSize, coordinateMap);
+Player player = new Player(gameSize, coordinateMap, "Kent Mansley");
+Player computer = new Player(gameSize, coordinateMap, "The Iron Giant");
 
 //For testing both the player and enemy ships are at the same location
+computer.PlaceShipsTest();
 player.PlaceShipsTest();
-enemy.PlaceShipsTest();
 
-for(int i = 0; i < 4; i++)
+for (int i = 0; i < 4; i++)
 {
-    player.GuessEnemyLocation(enemy);
+    player.GuessEnemyLocation(computer);
 }

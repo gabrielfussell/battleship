@@ -8,12 +8,13 @@ namespace Battleship
 {
     internal class Player
     {
+        public string Name { get; private set; }
         private List<IShip> Ships { get; set; }
         private Board OceanBoard { get; set; }
         private Board TargetBoard { get; set; }
         private CoordinateMap CoordinateMap { get; set; }
 
-        public Player(int gameSize, CoordinateMap coordinateMap)
+        public Player(int gameSize, CoordinateMap coordinateMap, string name)
         {
             Ships = new List<IShip>()
             {
@@ -27,21 +28,22 @@ namespace Battleship
             OceanBoard = new Board(gameSize);
             TargetBoard = new Board(gameSize);
             CoordinateMap = coordinateMap;
+            Name = name;
         }
 
         public void DisplayOceanBoard()
         {
-            Console.WriteLine("Ocean Board");
+            Console.WriteLine(Name + "'s " + "Ocean Board");
             OceanBoard.DisplayBoard(CoordinateMap);
         }
 
         public void DisplayTargetBoard()
         {
-            Console.WriteLine("Target Board");
+            Console.WriteLine(Name + "'s " + "Target Board");
             TargetBoard.DisplayBoard(CoordinateMap);
         }
 
-        public void PlaceShips()
+        public virtual void PlaceShips()
         {
             string instructions = @"Enter the coordinate where you want to place your ships followed by its orientation (without a space in between).
 The coordinate you enter represents the bow of the ship. 
@@ -116,7 +118,7 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
             DisplayOceanBoard();
         }
 
-        public void GuessEnemyLocation(Player enemy)
+        public virtual void GuessEnemyLocation(Player enemy)
         {
             /*
             check the other player's ocean board and see if there is a weakpoint there
@@ -172,18 +174,25 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
                 the ship object they belong to. These are created and set in Player.PlaceShips
                 which calls Ship.Place
                 */
-                Point shipWeakPoint = enemy.OceanBoard.BoardSpaces.GetSpace(guess.X, guess.Y);
+                WeakPoint shipWeakPoint = (WeakPoint)enemy.OceanBoard.BoardSpaces.GetSpace(guess.X, guess.Y);
                 shipWeakPoint.Hit();
                 guess.Hit();
+                DisplayTargetBoard();
 
-                Console.WriteLine("Enemy ship hit!");
+                Console.WriteLine("*****Enemy ship hit!*****");
+
+                if(shipWeakPoint.ContainingShip.HasSank)
+                {
+                    Console.WriteLine("*~*~*~*~*ENEMY " + shipWeakPoint.ContainingShip.Name.ToUpper() +  " SANK*~*~*~*~*");
+                }
             }
             else
             {
-                Console.WriteLine("Did not hit any ships");
+                DisplayTargetBoard();
+                Console.WriteLine("-----Did not hit any ships-----");
             }
 
-            TargetBoard.DisplayBoard(CoordinateMap);
+            Console.WriteLine();
         }
     }
 }
