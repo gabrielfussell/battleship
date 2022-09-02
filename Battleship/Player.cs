@@ -9,10 +9,11 @@ namespace Battleship
     internal class Player
     {
         public string Name { get; private set; }
-        private List<IShip> Ships { get; set; }
-        private Board OceanBoard { get; set; }
-        private Board TargetBoard { get; set; }
-        private CoordinateMap CoordinateMap { get; set; }
+        protected List<IShip> Ships { get; set; }
+        protected Board OceanBoard { get; set; }
+        protected Board TargetBoard { get; set; }
+        protected CoordinateMap CoordinateMap { get; set; }
+        protected readonly static Random Random = new Random();
 
         public Player(int gameSize, CoordinateMap coordinateMap, string name)
         {
@@ -43,6 +44,24 @@ namespace Battleship
             TargetBoard.DisplayBoard(CoordinateMap);
         }
 
+        /*
+         Used by the AI subclass so that it can guarantee a hit
+         on the enemy a certain percentage of the time.
+
+         First gets a ship that hasn't sank, then returns a
+         weakpoint on that ship that hasn't been hit.
+        */
+        public WeakPoint GetRandomUnhitShipWeakPoint()
+        {
+            List<IShip> unsunkShips = Ships.Where(s => s.HasSank == false).ToList();
+            int shipIndex = Random.Next(0, unsunkShips.Count - 1);
+            IShip ship = unsunkShips[shipIndex];
+
+            List<WeakPoint> weakPoints = ship.WeakPoints.Where(wp => wp.IsHit == false).ToList();
+            int weakPointIndex = Random.Next(0, weakPoints.Count - 1);
+            return ship.WeakPoints[weakPointIndex];
+        }
+
         public virtual void PlaceShips()
         {
             string instructions = @"Enter the coordinate where you want to place your ships followed by its orientation (without a space in between).
@@ -68,6 +87,7 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
                     {
                         Console.WriteLine("Enter a coordiante and orientation for your {0}, {1} space(s) long: ", ship.Name, ship.Size);
                         string input = Console.ReadLine().ToUpper();
+
                         if (input is null)
                         {
                             throw new Exception("Coordinate value cannot be null");

@@ -31,13 +31,22 @@ namespace Battleship
         {
             Health--;
             if (Health <= 0) HasSank = true;
-        }
+        }   
 
         public void Place(Board oceanBoard, ShipOrientation proposedOrientation, Coordinate proposedLocation)
         {
+            PlaceLogic(oceanBoard, proposedOrientation, proposedLocation.X, proposedLocation.Y);  
+        }
 
+        public void Place(Board oceanBoard, ShipOrientation proposedOrientation, int x, int y)
+        {
+            PlaceLogic(oceanBoard, proposedOrientation, x, y);
+        }
+
+        private void PlaceLogic(Board oceanBoard, ShipOrientation proposedOrientation, int x, int y)
+        {
             //Check that starting location is valid
-            if(!oceanBoard.IsOnBoard(proposedLocation))
+            if (!oceanBoard.IsOnBoard(x, y))
             {
                 throw new ArgumentException("Starting location is not on the board");
             }
@@ -50,24 +59,24 @@ namespace Battleship
              * Veritcal = decrement Y
              */
 
-            for(int i = 0; i < Size; i++)
-            { 
+            for (int i = 0; i < Size; i++)
+            {
                 if (i == 0)
                 {
                     //Starting location has already been checked
-                    weakPoints.Add(new WeakPoint(proposedLocation.X, proposedLocation.Y, this));
+                    weakPoints.Add(new WeakPoint(x, y, this));
                 }
                 else
                 {
-                    if(proposedOrientation == ShipOrientation.Horizontal)
+                    if (proposedOrientation == ShipOrientation.Horizontal)
                     {
                         //increment X each time. Y stays the same for all points.
-                        weakPoints.Add(new WeakPoint(proposedLocation.X + i, proposedLocation.Y, this));   
+                        weakPoints.Add(new WeakPoint(x + i, y, this));
                     }
-                    else if(proposedOrientation == ShipOrientation.Vertical)
+                    else if (proposedOrientation == ShipOrientation.Vertical)
                     {
                         //decrement Y each time. X stays the same for all points.
-                        weakPoints.Add(new WeakPoint(proposedLocation.X, proposedLocation.Y - i, this));
+                        weakPoints.Add(new WeakPoint(x, y - i, this));
                     }
 
                     //Make sure the point we just created is on the board and not already occupied
@@ -75,7 +84,7 @@ namespace Battleship
                     {
                         throw new Exception("Ship does not fit in the spaces specified");
                     }
-                    else if(oceanBoard.BoardSpaces.IsSpaceOccupied(weakPoints[i]))
+                    else if (oceanBoard.BoardSpaces.IsSpaceOccupied(weakPoints[i]))
                     {
                         throw new Exception("One or more spaces is already occupied by another ship");
                     }

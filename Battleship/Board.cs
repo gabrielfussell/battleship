@@ -97,13 +97,23 @@ namespace Battleship
         }
 
         public bool IsOnBoard(IPoint point)
+        { 
+            return IsOnBoardLogic(point.X, point.Y);
+        }
+
+        public bool IsOnBoard(int x, int y)
+        {
+            return IsOnBoardLogic(x, y);
+        }
+
+        private bool IsOnBoardLogic(int x, int y)
         {
             /*
              The first row and first column are reserved for labels and aren't
              available to place points on.
              */
-            return point.X > 0 && point.X < Size
-                && point.Y >= 0 && point.Y <= Size - 2;
+            return x > 0 && x < Size
+                && y >= 0 && y <= Size - 2;
         }
     }
 }

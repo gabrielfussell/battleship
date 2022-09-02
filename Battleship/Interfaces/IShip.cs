@@ -16,6 +16,7 @@ namespace Battleship
         ShipOrientation Orientation { get; }
         List<WeakPoint> WeakPoints { get; }
         void Place(Board board, ShipOrientation proposedOrientation, Coordinate proposedLocation);
+        void Place(Board oceanBoard, ShipOrientation proposedOrientation, int x, int y);
         void DecrementHealth();
     }
 }
