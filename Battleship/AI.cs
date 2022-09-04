@@ -9,7 +9,7 @@ namespace Battleship
     internal class AI : Player
     {
         private int GameSize { get; set; } //use to assist with getting random X and Y values
-        private readonly List<ShipOrientation> ShipOrientations = new List<ShipOrientation>() { ShipOrientation.Horizontal, ShipOrientation.Vertical };
+
         public AI(int gameSize, CoordinateMap coordinateMap, string name) : base(gameSize, coordinateMap, name)
         {
             GameSize = gameSize;
@@ -113,16 +113,62 @@ namespace Battleship
             */
 
             int i = Random.Next(0, 10);
+            Guess guess;
+            WeakPoint shipWeakPoint;
 
             if(i < 2)
             {
-                WeakPoint wp = enemy.GetRandomUnhitShipWeakPoint();
-                wp.Hit();
+                shipWeakPoint = enemy.GetRandomUnhitShipWeakPoint();
+                shipWeakPoint.Hit();
+
+                guess = new Guess(shipWeakPoint.X, shipWeakPoint.Y);
+                guess.Place(TargetBoard);
+                guess.Hit();
+
+                Console.WriteLine("(Guaranteed hit)\n");
+                DisplayHit(shipWeakPoint);
+                if (shipWeakPoint.ContainingShip.HasSank)
+                {
+                    enemy.DecrementHealth();
+                    DisplaySank(shipWeakPoint);
+                }
             }
             else
             {
-                //Pick a random spot on the target board
-            }
+                //Pick a random spot on the target board that hasn't already been guessed
+                while(true)
+                {
+                    int x = GetRandomXValue();
+                    int y = GetRandomYValue();
+
+                    if(TargetBoard.BoardSpaces.GetSpace(x, y) == null)
+                    {
+                        guess =  new Guess(x, y);
+                        guess.Place(TargetBoard);
+                        break;
+                    }
+                }
+
+                //Does an enemy ship exist at the point we've guessed?
+                if (enemy.OceanBoard.BoardSpaces.IsSpaceOccupied(guess.X, guess.Y))
+                {
+                    shipWeakPoint = (WeakPoint)enemy.OceanBoard.BoardSpaces.GetSpace(guess.X, guess.Y);
+                    shipWeakPoint.Hit();
+                    guess.Hit();
+
+                    DisplayHit(shipWeakPoint);
+
+                    if (shipWeakPoint.ContainingShip.HasSank)
+                    {
+                        enemy.DecrementHealth();
+                        DisplaySank(shipWeakPoint);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("-----" + Name + " did not hit any of your ships-----\n");
+                }
+            }  
         }
 
         /*
@@ -143,10 +189,14 @@ namespace Battleship
             return Random.Next(0, GameSize - 2);
         }
 
-        private ShipOrientation GetRandomShipOrientation()
+        private void DisplayHit(WeakPoint wp)
         {
-            int index = Random.Next(0, 1);
-            return ShipOrientations[index];
+            Console.WriteLine("-----" + Name + " hit your " + wp.ContainingShip.Name + "!-----\n");
+        }
+
+        private void DisplaySank(WeakPoint wp)
+        {
+            Console.WriteLine("-----" + Name + " SANK YOUR " + wp.ContainingShip.Name.ToUpper() + "!-----\n");
         }
     }
 }

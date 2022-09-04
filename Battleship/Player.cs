@@ -9,8 +9,9 @@ namespace Battleship
     internal class Player
     {
         public string Name { get; private set; }
+        public int Health { get; private set; }
         protected List<IShip> Ships { get; set; }
-        protected Board OceanBoard { get; set; }
+        public Board OceanBoard { get; protected set; }
         protected Board TargetBoard { get; set; }
         protected CoordinateMap CoordinateMap { get; set; }
         protected readonly static Random Random = new Random();
@@ -30,6 +31,7 @@ namespace Battleship
             TargetBoard = new Board(gameSize);
             CoordinateMap = coordinateMap;
             Name = name;
+            Health = Ships.Count();
         }
 
         public void DisplayOceanBoard()
@@ -42,6 +44,11 @@ namespace Battleship
         {
             Console.WriteLine(Name + "'s " + "Target Board");
             TargetBoard.DisplayBoard(CoordinateMap);
+        }
+
+        public void DecrementHealth()
+        {
+            Health = Health--;
         }
 
         /*
@@ -77,10 +84,10 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
             ";
 
             Console.WriteLine(instructions);
-            DisplayOceanBoard();
 
             foreach (IShip ship in Ships)
             {
+                DisplayOceanBoard();
                 while (true)
                 {
                     try
@@ -115,12 +122,11 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
 
                         ship.Place(OceanBoard, orientation, coordinate);
                         Console.WriteLine();
-                        DisplayOceanBoard();
                         break;
                     }
                     catch(Exception e)
                     {
-                        Console.WriteLine(e.Message + ". Please try again.");
+                        Console.WriteLine(e.Message + ". Please try again.\n");
                         continue;
                     }
                 }   
@@ -151,8 +157,10 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
             */
 
             string instructions = "Enter a coordinate where you think an enemy ship may be located.";
-   
+
             DisplayTargetBoard();
+            DisplayOceanBoard();
+
             Coordinate coordinate;
             Guess guess;
 
@@ -199,20 +207,19 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
                 guess.Hit();
                 DisplayTargetBoard();
 
-                Console.WriteLine("*****Enemy ship hit!*****");
+                Console.WriteLine("*****You hit an enemy " + shipWeakPoint.ContainingShip.Name + "*****\n");
 
                 if(shipWeakPoint.ContainingShip.HasSank)
                 {
-                    Console.WriteLine("*~*~*~*~*ENEMY " + shipWeakPoint.ContainingShip.Name.ToUpper() +  " SANK*~*~*~*~*");
+                    enemy.DecrementHealth();
+                    Console.WriteLine("*****YOU SANK AN ENEMY " + shipWeakPoint.ContainingShip.Name.ToUpper() + "*****\n");
                 }
             }
             else
             {
                 DisplayTargetBoard();
-                Console.WriteLine("-----Did not hit any ships-----");
+                Console.WriteLine("*****You did not hit any ships*****\n");
             }
-
-            Console.WriteLine();
         }
     }
 }

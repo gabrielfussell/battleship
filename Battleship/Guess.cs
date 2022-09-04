@@ -40,7 +40,15 @@ namespace Battleship
 
         public void Place(Board targetBoard)
         {
-            targetBoard.BoardSpaces.SetSpace(this);
+            try
+            {
+                targetBoard.BoardSpaces.SetSpace(this);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("You have already guessed this location", e);
+            }
+            
         }
     }
 }
