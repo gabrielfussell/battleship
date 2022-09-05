@@ -9,10 +9,44 @@ namespace Battleship
     internal class AI : Player
     {
         private int GameSize { get; set; } //use to assist with getting random X and Y values
+        private List<Tuple<int, int>> AllPoints { get; set; }
 
         public AI(int gameSize, CoordinateMap coordinateMap, string name) : base(gameSize, coordinateMap, name)
         {
+            /*
+             * GameSize is NOT incremented like in the Board class since AI isn't dealing
+             * directly with the row and column labels.
+             */
             GameSize = gameSize;
+
+            /*
+            Populate AllCoordinates with a list of all x,y coordinates where a ship or guess
+            can be placed, in random order. Used to make guesses.
+
+            Valid points are:
+            X > 0 && X <= GameSize
+            Y >= 0 && Y < GameSize;
+            */
+
+            List<Tuple<int, int>> pointsInOrder = new List<Tuple<int, int>>(GameSize * GameSize);
+
+            for(int x = 1; x <= GameSize; x++)
+            {
+                for(int y = 0; y < GameSize; y++)
+                {
+                    pointsInOrder.Add(new Tuple<int, int>(x, y));
+                }
+            }
+
+            int count = pointsInOrder.Count;
+            AllPoints = new List<Tuple<int, int>>(count);
+            
+            for(int i = 0; i < count; i++)
+            {
+                int randomElementIndex = Random.Next(0, pointsInOrder.Count);
+                AllPoints.Add(pointsInOrder[randomElementIndex]);
+                pointsInOrder.RemoveAt(randomElementIndex);
+            }
         }
 
         public override void PlaceShips()
@@ -132,21 +166,30 @@ namespace Battleship
                     enemy.DecrementHealth();
                     DisplaySank(shipWeakPoint);
                 }
+
+                /*
+                Because we don't know where in AllPoints this (x,y) value is, the ELSE block will
+                remove it from the list when it tries to guess it again.
+                */
             }
             else
             {
                 //Pick a random spot on the target board that hasn't already been guessed
                 while(true)
                 {
-                    int x = GetRandomXValue();
-                    int y = GetRandomYValue();
+                    Console.WriteLine("Choosing random point...");
+                    Tuple<int, int> randomPoint = AllPoints[0];
 
-                    if(TargetBoard.BoardSpaces.GetSpace(x, y) == null)
+                    if(TargetBoard.BoardSpaces.GetSpace(randomPoint.Item1, randomPoint.Item2) == null)
                     {
-                        guess =  new Guess(x, y);
+                        guess =  new Guess(randomPoint.Item1, randomPoint.Item2);
                         guess.Place(TargetBoard);
+                        AllPoints.RemoveAt(0);
                         break;
                     }
+
+                    //Space has already been guessed so remove from list of options
+                    AllPoints.RemoveAt(0);
                 }
 
                 //Does an enemy ship exist at the point we've guessed?
@@ -169,24 +212,6 @@ namespace Battleship
                     Console.WriteLine("-----" + Name + " did not hit any of your ships-----\n");
                 }
             }  
-        }
-
-        /*
-        Valid points where ships can be placed:
-            X > 0 && X < GameSize
-            Y >= 0 && Y <= GameSize - 2;
-
-        X and Y  are in separate methods so that either a WeakPoint or a Guess can be constructed by the calling method.
-         */
-
-        private int GetRandomXValue()
-        {
-            return Random.Next(1, GameSize - 1);
-        }
-
-        private int GetRandomYValue()
-        {
-            return Random.Next(0, GameSize - 2);
         }
 
         private void DisplayHit(WeakPoint wp)

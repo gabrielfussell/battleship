@@ -48,7 +48,7 @@ namespace Battleship
 
         public void DecrementHealth()
         {
-            Health = Health--;
+            Health = Health - 1;
         }
 
         /*
@@ -64,9 +64,9 @@ namespace Battleship
             int shipIndex = Random.Next(0, unsunkShips.Count - 1);
             IShip ship = unsunkShips[shipIndex];
 
-            List<WeakPoint> weakPoints = ship.WeakPoints.Where(wp => wp.IsHit == false).ToList();
-            int weakPointIndex = Random.Next(0, weakPoints.Count - 1);
-            return ship.WeakPoints[weakPointIndex];
+            List<WeakPoint> unhitWeakPoints = ship.WeakPoints.Where(wp => wp.IsHit == false).ToList();
+            int weakPointIndex = Random.Next(0, unhitWeakPoints.Count - 1);
+            return unhitWeakPoints[weakPointIndex];
         }
 
         public virtual void PlaceShips()
@@ -131,6 +131,7 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
                     }
                 }   
             }
+            Console.Clear();
         }
 
         public void PlaceShipsTest()
@@ -205,7 +206,8 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
                 WeakPoint shipWeakPoint = (WeakPoint)enemy.OceanBoard.BoardSpaces.GetSpace(guess.X, guess.Y);
                 shipWeakPoint.Hit();
                 guess.Hit();
-                DisplayTargetBoard();
+                Console.Clear();
+                //DisplayTargetBoard();
 
                 Console.WriteLine("*****You hit an enemy " + shipWeakPoint.ContainingShip.Name + "*****\n");
 
@@ -217,7 +219,8 @@ You place a Cruiser at B2V. Because it has a size of 3 it will occupy spaces B2,
             }
             else
             {
-                DisplayTargetBoard();
+                Console.Clear();
+                //DisplayTargetBoard();
                 Console.WriteLine("*****You did not hit any ships*****\n");
             }
         }

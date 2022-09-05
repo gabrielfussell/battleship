@@ -113,7 +113,13 @@ while(player.Health > 0 && computer.Health > 0)
 {
     Console.WriteLine(separator);
     player.GuessEnemyLocation(computer);
+    if (computer.Health == 0) break;
+
     computer.GuessEnemyLocation(player);
+    if (player.Health == 0) break;
+
+    Console.WriteLine(player.Name + "'s health: " + player.Health.ToString());
+    Console.WriteLine(computer.Name + "'s health: " + computer.Health.ToString());
 }
 
 Console.WriteLine(separator);
