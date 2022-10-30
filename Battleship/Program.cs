@@ -105,8 +105,8 @@ CoordinateMap coordinateMap = new CoordinateMap(gameSize);
 Player player = new Player(gameSize, coordinateMap, playerName);
 AI computer = new AI(gameSize, coordinateMap, computerName);
 
-//player.PlaceShips();
-player.PlaceShipsTest();
+player.PlaceShips();
+//player.PlaceShipsTest();
 computer.PlaceShips();
 
 while(player.Health > 0 && computer.Health > 0)

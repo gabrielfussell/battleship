@@ -6,15 +6,43 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
+    /// <summary>
+    /// The grid a player uses to track ships and guesses.
+    /// </summary>
+    /// <remarks>
+    /// Holds either ship weakpoints if an ocean board or guesses if a target board.
+    /// </remarks>
     internal class Board
     {
-        
+        /// <summary>
+        /// The size of the square board.
+        /// </summary>
+        /// <remarks>
+        /// The first row and first column are always for labels.
+        /// </remarks>
         public int Size { get; protected set; }
+
+        /// <summary>
+        /// The contents of the board.
+        /// </summary>
         public BoardSpaces BoardSpaces { get; protected set; }
         private string _emptyCell { get; } = "|___";
 
+        /// <summary>
+        /// Create an emplty board.
+        /// </summary>
+        /// <param name="size">The size of one side of the square of playable spaces.</param>
+        /// <remarks>
+        /// Can become either an ocean board or a target board depending on what is
+        /// stored in the BoardSpaces array.
+        /// </remarks>
         public Board(int size)
         {
+            /*
+            The boardspaces array is created for the entire board, including the first row
+            and column which are only for labels and not part of the playable area. The
+            IsOnBoard methods serve to restrive players to only the spaces in the playable area.
+            */
             Size = size + 1; //add one to account for first row and column being labels
             BoardSpaces = new BoardSpaces(Size);
         }
@@ -29,7 +57,10 @@ namespace Battleship
         |_E_|___|___|___|___|___|
          */
 
-        //Should this just loop through BoardSpaces instead?
+        /// <summary>
+        /// Write the board to the console.
+        /// </summary>
+        /// <param name="coordinateMap"></param>
         public void DisplayBoard(CoordinateMap coordinateMap)
         {
             string boardToDisplay = "";
@@ -83,9 +114,15 @@ namespace Battleship
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Represents the a space on the board as displayed in the console.
+        /// </summary>
+        /// <param name="value">The contents of the cell.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when <c>value</c> is too long to fit in the cell.</exception>
         private string CreatePopulatedCell(string value)
         {
-            // Empty: |___ Populated: |_S_ or |_SX
+            // Empty: |___ Populated: |_S_ if hit or |_SX if unhit
             if(value.Length > 2)
             {
                 throw new ArgumentException("value of a cell cannot be more than 2 characters long");
@@ -96,11 +133,22 @@ namespace Battleship
             return cell;
         }
 
+        /// <summary>
+        /// Whether the IPoint object is within the bounds of the playable area of the board.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns>True if the point is within bounds, otherwise false.</returns>
         public bool IsOnBoard(IPoint point)
         { 
             return IsOnBoardLogic(point.X, point.Y);
         }
 
+        /// <summary>
+        /// Whether the X, Y pair is within the bounds of the playable area of the board.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns>True if the X, Y pair is within bounds, otherwise false.</returns>
         public bool IsOnBoard(int x, int y)
         {
             return IsOnBoardLogic(x, y);

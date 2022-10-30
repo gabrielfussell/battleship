@@ -6,21 +6,34 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
+    /// <summary>
+    /// A player object who guesses and places ships automatically.
+    /// </summary>
     internal class AI : Player
     {
         private int GameSize { get; set; } //use to assist with getting random X and Y values
+        
+        /// <summary>
+        /// All available points on the board in random order
+        /// </summary>
         private List<Tuple<int, int>> AllPoints { get; set; }
 
+        /// <summary>
+        /// Create an AI object
+        /// </summary>
+        /// <param name="gameSize">The size of the game being played.</param>
+        /// <param name="coordinateMap">A CoordinateMap object created for the size of the game.</param>
+        /// <param name="name">The name of the AI.</param>
         public AI(int gameSize, CoordinateMap coordinateMap, string name) : base(gameSize, coordinateMap, name)
         {
             /*
-             * GameSize is NOT incremented like in the Board class since AI isn't dealing
-             * directly with the row and column labels.
-             */
+            GameSize is NOT incremented by 1 like in the Board class since AI isn't dealing
+            directly with the row and column labels.
+            */
             GameSize = gameSize;
 
             /*
-            Populate AllCoordinates with a list of all x,y coordinates where a ship or guess
+            Populate AllPoints with a list of all x,y pairs where a ship or guess
             can be placed, in random order. Used to make guesses.
 
             Valid points are:
@@ -49,6 +62,9 @@ namespace Battleship
             }
         }
 
+        /// <summary>
+        /// Automatically place ships on the ocean board
+        /// </summary>
         public override void PlaceShips()
         {
             int i = Random.Next(0, 3);
@@ -139,6 +155,10 @@ namespace Battleship
             }
         }
 
+        /// <summary>
+        /// Automatically guess the location of the enemy's ships.
+        /// </summary>
+        /// <param name="enemy">The player object for the human player.</param>
         public override void GuessEnemyLocation(Player enemy)
         {
             /*
@@ -159,7 +179,7 @@ namespace Battleship
                 guess.Place(TargetBoard);
                 guess.Hit();
 
-                Console.WriteLine("(Guaranteed hit)\n");
+                //Console.WriteLine("(Guaranteed hit)\n");
                 DisplayHit(shipWeakPoint);
                 if (shipWeakPoint.ContainingShip.HasSank)
                 {
@@ -177,7 +197,7 @@ namespace Battleship
                 //Pick a random spot on the target board that hasn't already been guessed
                 while(true)
                 {
-                    Console.WriteLine("Choosing random point...");
+                    //Console.WriteLine("Choosing random point...");
                     Tuple<int, int> randomPoint = AllPoints[0];
 
                     if(TargetBoard.BoardSpaces.GetSpace(randomPoint.Item1, randomPoint.Item2) == null)
@@ -214,11 +234,19 @@ namespace Battleship
             }  
         }
 
+        /// <summary>
+        /// Write to the console that a weakpoint on the player's ship was hit.
+        /// </summary>
+        /// <param name="wp">The weakpoint on the ship that was hit.</param>
         private void DisplayHit(WeakPoint wp)
         {
             Console.WriteLine("-----" + Name + " hit your " + wp.ContainingShip.Name + "!-----\n");
         }
 
+        /// <summary>
+        /// Write to the console that a player's ship was sank.
+        /// </summary>
+        /// <param name="wp">The weakpoint on the ship that was sank.</param>
         private void DisplaySank(WeakPoint wp)
         {
             Console.WriteLine("-----" + Name + " SANK YOUR " + wp.ContainingShip.Name.ToUpper() + "!-----\n");
